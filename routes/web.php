@@ -18,12 +18,6 @@ Route::middleware('auth')->group(function(){
 
 });
 
-Route::middleware(['auth','role:1'])->group(function(){
-
-    Route::get('/dashboard',[AdminController::class,'Dashboard'])->name('dashboard');
-
-});
-
 
 Route::controller(UserController::class)->group(function(){
 
@@ -45,5 +39,20 @@ Route::controller(UserController::class)->group(function(){
 
     Route::post('/reset-password/submit','resetPasswordSubmit')->name('reset.password.submit');
 
+});
+
+Route::middleware('admin:admin')->group(function(){
+
+    Route::get('/dashboard',[AdminController::class,'Dashboard'])->name('dashboard');
+
+    Route::get('/admin/logout',[AdminController::class,'adminLogout'])->name('admin.logout');
+
+});
+
+Route::controller(AdminController::class)->group(function(){
+
+    Route::get('/admin/login',action: [AdminController::class,'adminLogin'])->name('admin.login');
+
+    Route::post('/admin/login/submit',action: [AdminController::class,'adminLoginSubmit'])->name('admin.login.submit');
 
 });

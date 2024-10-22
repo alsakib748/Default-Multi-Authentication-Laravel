@@ -30,7 +30,6 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->role = '0';
         $user->status = 'pending';
         $user->token = $token;
         $user->save();
@@ -73,7 +72,7 @@ class UserController extends Controller
                 'message' => $user->name.' you are register successfully'
             ]);
 
-            return redirect()->route('dashboard')->with('notification',$notification);
+            return redirect()->route('home')->with('notification',$notification);
         }
 
     }
@@ -88,16 +87,8 @@ class UserController extends Controller
 
         ];
 
-        if(Auth::attempt($credentials)){
-
-            if(Auth::guard('web')->user()->role == 1){
-                return redirect()->route('dashboard');
-            }else if(Auth::guard('web')->user()->role == 0){
-                return redirect()->route('home');
-            }else{
-                return redirect()->route('login');
-            }
-
+        if(Auth::guard('web')->attempt($credentials)){
+            return redirect()->route('home');
         }else{
             return redirect()->route('login');
         }
